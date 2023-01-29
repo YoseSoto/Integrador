@@ -1,0 +1,16 @@
+Destino: Monterrey,NL
+Id: 655
+Aerolinea: Volaris
+Clase: Primera Clase
+Precio: 2054
+Kilometros: 990
+Tiempo estimado: 1.44h
+Avion: AirbusA320
+Destino: Cancun
+Id: 7263
+Aerolinea: Viva Aerobus
+Clase: Turista
+Precio: 1449
+Kilometros: 1608
+Tiempo estimado: 2:16h
+Avion: Boeing737

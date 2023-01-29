@@ -1,5 +1,3 @@
-#include <iostream>
-#include <string>
 #include "vuelo.h"
 #include <conio.h>
 using namespace std;
@@ -16,6 +14,11 @@ bool band = false;
 
 string _usuario, _password, _password2, in_user, in_pass;
 char caracter;
+
+Avion AirbusA320 = Avion("AirbusA320",4,220);
+Avion Boeing737 = Avion("Boeing737",8,220);
+Vuelo CDMXtoMTY = Vuelo(numPasajeros, 655,"Volaris",2054,"Monterrey,NL",990,AirbusA320,"1.44h","Primera Clase");
+Vuelo CDMXtoCUN = Vuelo(numPasajeros, 7263,"Viva Aerobus",1449,"Cancun",1608,Boeing737,"2:16h","Turista");
 
 bool login(){
     system("cls");
@@ -127,16 +130,15 @@ void registro(){
 }
 
 void addFlightToDataBase(Vuelo flight){
-    vuelos.open("vuelo.txt", ios::app);
-    vuelos << flight.getDest();
-    vuelos << flight.getId();
-    vuelos << flight.getAeroline();
-    vuelos << flight.getClass();    
-    vuelos << flight.getPrice();
-    vuelos << flight.getKm();
-    vuelos << flight.getTimeLength();
-    vuelos << flight.getAvion().getName();
-    vuelos << flight.getPassengers();
+    vuelos.open("vuelos.txt", ios::app);
+    vuelos << "Destino: "<< flight.getDest() << endl;
+    vuelos << "Id: " << flight.getId() << endl;
+    vuelos << "Aerolinea: " << flight.getAeroline() << endl;
+    vuelos << "Clase: " << flight.getClass() << endl;    
+    vuelos << "Precio: " << flight.getPrice() << endl;
+    vuelos << "Kilometros: " << flight.getKm() << endl;
+    vuelos << "Tiempo estimado: " << flight.getTimeLength() << endl;
+    vuelos << "Avion: " << flight.getAvion().getName() << endl;
     lista_vuelos.push_back(flight);
     vuelos.close();
 }
@@ -144,33 +146,25 @@ void addFlightToDataBase(Vuelo flight){
 void listaVuelos(){
 
     vuelos.open("vuelos.txt",ios::in);
-
+    int i,j=0;
     char opcion;
     string temp_line;
 
-    Avion AirbusA320 = Avion("AirbusA320",4,220);
-    Avion Boeing737 = Avion("Boeing737",8,220);
-
     lista_aviones.push_back(AirbusA320);
     lista_aviones.push_back(Boeing737);
-
-    Vuelo CDMXtoMTY = Vuelo(numPasajeros, 655,"Volaris",2054,"Monterrey,NL",990,lista_aviones.at(0),"1.44h","Primera Clase");
-    Vuelo CDMXtoCUN = Vuelo(numPasajeros, 7263,"Viva Aerobus",1449,"Cancun",1608,lista_aviones.at(1),"2:16h","Turista");
     
-    addFlightToDataBase(CDMXtoMTY);
-    addFlightToDataBase(CDMXtoCUN);
-
     do{
-        cout<<"\tLista de vuelos disponibles\n";
+        system("cls");
+        cout<<"\n\tLista de vuelos disponibles\n";
         while(!vuelos.eof()){
-            for(int i=0; i<9;i++){
-                cout<<"Detalles de vuelo "<<i+1<<"): \n";
+            cout<<"Detalles de vuelo "<<j+1<<"): \n";
+            for(i=0; i<9;i++){
                 getline(vuelos,temp_line);
-                cout<<temp_line<<endl<<endl;
+                cout<<"   "<<temp_line<<endl;
             }
-            vuelos.close();
+            j++;
         }
-        cout<<"0) Regresar\n";
+        cout<<"    0) Regresar\n";
         cin >> opcion;
         switch(opcion){
             case '1':
@@ -195,7 +189,8 @@ void listaVuelos(){
                 cout<<"Opcion inexistente...\n";
 
         }
-    }while(opcion != 0);
+    }while(opcion != '0');
+    vuelos.close();
     band = true;
 }
 
@@ -206,7 +201,7 @@ void checarVuelo(){
 void menu(){
     char opcion;
     do{
-        cout<<"\tReservaciones Yose\n";
+        cout<<"\n\tReservaciones Yose\n";
         cout<<"1) Reservar vuelo\n";
         cout<<"2) Checar vuelo\n";
         cout<<"3) Salir\n";
@@ -214,12 +209,7 @@ void menu(){
         switch(opcion){
             case '1':
                 system("cls");
-                if(!band){
-                    listaVuelos();
-                }
-                else{
-                    "Usted ya tiene un vuelo en reserva!\n";
-                }
+                listaVuelos();
             break;
             case '2':
                 system("cls");
@@ -241,6 +231,12 @@ void menu(){
 }
 
 void app(){
+    if(!vuelos.fail()){
+        vuelos.open("vuelos.txt",ios::out);
+        vuelos.close();
+        addFlightToDataBase(CDMXtoMTY);
+        addFlightToDataBase(CDMXtoCUN);
+    }
     char opcion;
     do{
         cout<<"1) Iniciar sesion\n";
