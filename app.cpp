@@ -12,7 +12,7 @@ vector<Vuelo> lista_vuelos;
 
 bool band = false;
 
-string _usuario, _password, _password2, in_user, in_pass;
+string _usuario, _password, _password2;
 char caracter;
 
 Avion AirbusA320 = Avion("AirbusA320",4,220);
@@ -22,35 +22,34 @@ Vuelo CDMXtoCUN = Vuelo(numPasajeros, 7263,"Viva Aerobus",1449,"Cancun",1608,Boe
 
 bool login(){
     system("cls");
+    string in_user, in_pass;
     usuarios.open("usuarios.txt",ios::in);
     cout<<"Usuario: "; 
-    cin >> _usuario;
+    cin >> in_user;
     cout<<"Password: "; 
 
     caracter = getch();
     while (caracter != 13){
         if(caracter != 8){
-            _password.push_back(caracter);
+            in_pass.push_back(caracter);
             cout << "*";
         }
         else{
-            if(_password.length() > 0){
+            if(in_pass.length() > 0){
                 cout << "\b \b";
-                _password = _password.substr(0, _password.length() - 1);
+                in_pass = in_pass.substr(0, in_pass.length() - 1);
             }
         }
         caracter = getch();
     }
 
     if(usuarios.is_open()){
-        int i = 1;
         while(!usuarios.eof()){
-            getline(usuarios,in_user);
-            getline(usuarios,in_pass);
+            getline(usuarios,_usuario);
+            getline(usuarios,_password);
             if( in_user == _usuario && in_pass == _password ){
                 return true;
             }
-        i++;
         }
     }
     usuarios.close();   
@@ -169,11 +168,13 @@ void listaVuelos(){
         switch(opcion){
             case '1':
                 system("cls");
-                CDMXtoMTY.agregar(CDMXtoMTY);
+                CDMXtoMTY.agregar();
+                lista_reservaciones.push_back(CDMXtoMTY);
             break;
             case '2':
                 system("cls");
-                CDMXtoCUN.agregar(CDMXtoCUN);
+                CDMXtoCUN.agregar();
+                lista_reservaciones.push_back(CDMXtoCUN);
             break;
             case '3':
             break;

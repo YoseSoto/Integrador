@@ -56,7 +56,7 @@ class Vuelo{
         string getClass();
         double getPrice();
         int getId();
-        void agregar(Vuelo);
+        void agregar();
         void comprarVuelo();
         void cancelarVuelo();
 };
@@ -121,7 +121,7 @@ void Vuelo::cancelarVuelo(){
     
 }
 
-void Vuelo::agregar(Vuelo vuelo){
+void Vuelo::agregar(){
     int i=0,j;
     string temp_nombre, temp_last;
     reservaciones.open("reservaciones.txt",ios::app);
@@ -130,18 +130,18 @@ void Vuelo::agregar(Vuelo vuelo){
     cin >> numPasajeros;
     
     for(j = 0 ; j < numPasajeros ; j++){
+        fflush(stdin);
         cout << "Ingrese nombre y apellido de la persona [" << j+1 << "]: ";
         cin >> temp_nombre, temp_last;
         Pasajero pasajero = Pasajero(temp_nombre, temp_last);
-        lista_pasajeros.push_back(pasajero);
+        this->lista_pasajeros.push_back(pasajero);
     }
-    lista_reservaciones.push_back(vuelo);
 
     while(!reservaciones.eof()){
-        for(j = 0; j < lista_pasajeros.size() ; j++){
+        for(j = 0; j < numPasajeros ; j++){
             reservaciones << lista_reservaciones.at(j).lista_pasajeros.at(j).getCompleteName();
         }  
-        //reservaciones << lista_reservaciones.at(i).getId();
+        reservaciones << lista_reservaciones.at(i).getId();
         i++;
     }
     reservaciones.close();
