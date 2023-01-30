@@ -1,7 +1,7 @@
 #include "vuelo.h"
 using namespace std;
 
-vector<Usuario> usuariolista;
+vector<Usuario> usuarioActivo;
 vector<Usuario> usersLoggedIn;
 
 fstream vuelos;
@@ -18,6 +18,11 @@ Vuelo CDMXtoMTY = Vuelo(numPasajeros, 655,"Volaris",2054,"Monterrey,NL",990,Airb
 Vuelo CDMXtoCUN = Vuelo(numPasajeros, 7263,"Viva Aerobus",1449,"Cancun",1608,Boeing737,"2:16h","Turista");
 
 bool login(){
+
+    while(usuarioActivo.size() != 0){
+        usuarioActivo.pop_back();
+    }
+
     system("cls");
     string temp_data;
     string in_user, in_pass;
@@ -44,11 +49,8 @@ bool login(){
 
     while(!userData.eof()){
         getline(userData,temp_data);
-        cout<<temp_data<<endl;
         string user = "Usuario: " + in_user;
-        cout<<user<<endl;
         if(temp_data == user){
-            cout<<"NOMBRE ENCONTRADO: " << temp_data;
             getline(userData,temp_data);
             getline(userData,temp_data);   
             userData.close();
@@ -61,8 +63,8 @@ bool login(){
             if( in_user == _usuario && in_pass == _password ){
                 Usuario usuario = Usuario(temp_data, _password);   
                 usuario.setName(temp_data);
-                usuariolista.push_back(usuario);
-                usuariolista.at(0).setUser(_usuario);
+                usuario.setUser(_usuario);
+                usuarioActivo.push_back(usuario);
                 usuarios.close();   
                 return true;
             }
@@ -248,7 +250,7 @@ void menu(){
             break;
             case '3':
                 system("cls");
-                usuariolista.at(1).changePass();
+                usuarioActivo.at(0).changePass();
             break;
             case '4':
                 system("cls");
@@ -276,9 +278,9 @@ void app(){
         switch(opcion){
             case '1': 
                 if(login()){
-                    //system("cls");
-                    cout<<"Bienvenido! " << usuariolista.at(0).getName() << endl;
-                    cout<<"NOMBRE: " << usuariolista[0].getName() << endl;
+                    system("cls");
+                    cout<<"Bienvenido, " << usuarioActivo.at(0).getName() << "!" << endl;
+                    //cout << usuarioActivo.size() << endl;
                     menu();
                 }
                 else{

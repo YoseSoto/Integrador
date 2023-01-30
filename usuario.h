@@ -112,47 +112,51 @@ void Usuario::changePass(){
                 cout<<this->getUserPass()<<endl;
             }     
     }while(temp_pass != this->password);
+
     usuarios.open("usuarios.txt", ios::app);
+
+    string temp_passx,temp_pass2x,tempx;
+
     do{  
-        if(temp_pass != temp_pass2){
+        if(temp_passx != temp_pass2x){
             cout<<"Las password no coinciden\n";
         }
-        cout<<"Ingrese nueva password: ";
+        cout<<"\nIngrese nueva password: ";
 
         caracter = getch();
         while (caracter != 13){
             if(caracter != 8){
-                temp_pass.push_back(caracter);
+                temp_passx.push_back(caracter);
                 cout << "*";
             }
             else{
-                if(temp_pass.length() > 0){
+                if(temp_passx.length() > 0){
                     cout << "\b \b";
-                    temp_pass = temp_pass.substr(0, temp_pass.length() - 1);
+                    temp_passx = temp_passx.substr(0, temp_passx.length() - 1);
                 }
             }
         caracter = getch();
         }
 
-        cout<<"Confirme nueva password: ";
+        cout<<"\nConfirme nueva password: ";
 
         caracter = getch();
         while (caracter != 13){
             if(caracter != 8){
-                temp_pass2.push_back(caracter);
+                temp_pass2x.push_back(caracter);
                 cout << "*";
             }
             else{
-                if(temp_pass2.length() > 0){
+                if(temp_pass2x.length() > 0){
                     cout << "\b \b";
-                    temp_pass2 = temp_pass2.substr(0, temp_pass2.length() - 1);
+                    temp_pass2x = temp_pass2x.substr(0, temp_pass2x.length() - 1);
                 }
             }
         caracter = getch();
         }
         
-    }while(temp_pass != temp_pass2);
-    this->password = temp_pass;
+    }while(temp_passx != temp_pass2x);
+    this->password = temp_passx;
     system("cls");
     cout<<"Su password ha cambiado con exito!\n";
     usuarios.close();
