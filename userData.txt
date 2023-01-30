@@ -1,0 +1,6 @@
+Usuario: yosesoto
+Password: 1yosemi0
+Nombre: Yose
+Apellido: Sotomayor
+Edad: 18
+

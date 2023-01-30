@@ -1,9 +1,7 @@
 #include "vuelo.h"
-#include <conio.h>
 using namespace std;
 
-fstream usuarios;
-vector<Usuario> lista_usuarios;
+vector<Usuario> usuariolista;
 vector<Usuario> usersLoggedIn;
 
 fstream vuelos;
@@ -13,7 +11,6 @@ vector<Vuelo> lista_vuelos;
 bool band = false;
 
 string _usuario, _password, _password2;
-char caracter;
 
 Avion AirbusA320 = Avion("AirbusA320",4,220);
 Avion Boeing737 = Avion("Boeing737",8,220);
@@ -22,8 +19,10 @@ Vuelo CDMXtoCUN = Vuelo(numPasajeros, 7263,"Viva Aerobus",1449,"Cancun",1608,Boe
 
 bool login(){
     system("cls");
+    string temp_data;
     string in_user, in_pass;
     usuarios.open("usuarios.txt",ios::in);
+    userData.open("userData.txt",ios::in);
     cout<<"Usuario: "; 
     cin >> in_user;
     cout<<"Password: "; 
@@ -43,25 +42,49 @@ bool login(){
         caracter = getch();
     }
 
+    while(!userData.eof()){
+        getline(userData,temp_data);
+        cout<<temp_data<<endl;
+        string user = "Usuario: " + in_user;
+        cout<<user<<endl;
+        if(temp_data == user){
+            cout<<"NOMBRE ENCONTRADO: " << temp_data;
+            getline(userData,temp_data);
+            getline(userData,temp_data);   
+            userData.close();
+        }
+    }
     if(usuarios.is_open()){
         while(!usuarios.eof()){
             getline(usuarios,_usuario);
             getline(usuarios,_password);
             if( in_user == _usuario && in_pass == _password ){
+                Usuario usuario = Usuario(temp_data, _password);   
+                usuario.setName(temp_data);
+                usuariolista.push_back(usuario);
+                usuariolista.at(0).setUser(_usuario);
+                usuarios.close();   
                 return true;
             }
         }
     }
-    usuarios.close();   
+    usuarios.close();    
     return false;
 }
 
 void addUserToDataBase(Usuario user){
     usuarios.open("usuarios.txt", ios::app);
+    userData.open("userData.txt",ios::app);
     usuarios << user.getUser() << endl;
     usuarios << user.getUserPass() << endl;
+    userData << "Usuario: " << user.getUser() << endl;
+    userData << "Password: " << user.getUserPass() << endl;
+    userData << "Nombre: " << user.getName() << endl;
+    userData << "Apellido: " << user.getLast() << endl;
+    userData << "Edad: " << user.getAge() << endl << endl;
     usersLoggedIn.push_back(user);
-    usuarios.close();
+    userData.close();
+    userData.close();
 }
 
 void registro(){ 
@@ -127,6 +150,7 @@ void registro(){
     cout<<"Usuario agregado con exito!\n";
     usuarios.close();   
 }
+
 
 void addFlightToDataBase(Vuelo flight){
     vuelos.open("vuelos.txt", ios::app);
@@ -205,7 +229,8 @@ void menu(){
         cout<<"\n\tReservaciones Yose\n";
         cout<<"1) Reservar vuelo\n";
         cout<<"2) Checar vuelo\n";
-        cout<<"3) Salir\n";
+        cout<<"3) Cambiar password\n";
+        cout<<"4) Salir\n";
         cin>>opcion;
         switch(opcion){
             case '1':
@@ -223,12 +248,16 @@ void menu(){
             break;
             case '3':
                 system("cls");
+                usuariolista.at(1).changePass();
             break;
+            case '4':
+                system("cls");
+                break;
             default: 
                 system("cls");
                 cout<<"Opcion inexistente...\n";
         }
-    }while(opcion != '3');
+    }while(opcion != '4');
 }
 
 void app(){
@@ -247,8 +276,9 @@ void app(){
         switch(opcion){
             case '1': 
                 if(login()){
-                    system("cls");
-                    cout<<"Bienvenido!" << endl;
+                    //system("cls");
+                    cout<<"Bienvenido! " << usuariolista.at(0).getName() << endl;
+                    cout<<"NOMBRE: " << usuariolista[0].getName() << endl;
                     menu();
                 }
                 else{
