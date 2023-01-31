@@ -18,16 +18,16 @@ Vuelo CDMXtoMTY = Vuelo(numPasajeros, 655,"Volaris",2054,"Monterrey,NL",990,Airb
 Vuelo CDMXtoCUN = Vuelo(numPasajeros, 7263,"Viva Aerobus",1449,"Cancun",1608,Boeing737,"2:16h","Turista");
 
 bool login(){
+    system("cls");
+    string in_user, in_pass;
+    string temp_user, temp_pass, temp_name, temp_last, temp_age, fileSpace;
 
     while(usuarioActivo.size() != 0){
         usuarioActivo.pop_back();
     }
 
-    system("cls");
-    string temp_data;
-    string in_user, in_pass;
-    usuarios.open("usuarios.txt",ios::in);
     userData.open("userData.txt",ios::in);
+
     cout<<"Usuario: "; 
     cin >> in_user;
     cout<<"Password: "; 
@@ -46,39 +46,32 @@ bool login(){
         }
         caracter = getch();
     }
-
     while(!userData.eof()){
-        getline(userData,temp_data);
-        string user = "Usuario: " + in_user;
-        if(temp_data == user){
-            getline(userData,temp_data);
-            getline(userData,temp_data);   
+        getline(userData,temp_user);
+        getline(userData,temp_pass);
+        getline(userData,temp_name);
+        getline(userData,temp_last);
+        getline(userData,temp_age);
+        getline(userData,fileSpace);
+        if( "Usuario: " + in_user == temp_user && "Password: " + in_pass == temp_pass ){
+            Usuario usuario = Usuario(temp_name, in_pass);   
+            usuario.setName(temp_name);
+            usuario.setUser(in_user);
+            usuario.setPass(in_pass);
+            usuarioActivo.push_back(usuario);  
             userData.close();
+            return true;
+        }
+        else{
+            break;
         }
     }
-    if(usuarios.is_open()){
-        while(!usuarios.eof()){
-            getline(usuarios,_usuario);
-            getline(usuarios,_password);
-            if( in_user == _usuario && in_pass == _password ){
-                Usuario usuario = Usuario(temp_data, _password);   
-                usuario.setName(temp_data);
-                usuario.setUser(_usuario);
-                usuarioActivo.push_back(usuario);
-                usuarios.close();   
-                return true;
-            }
-        }
-    }
-    usuarios.close();    
+    userData.close();    
     return false;
 }
 
 void addUserToDataBase(Usuario user){
-    usuarios.open("usuarios.txt", ios::app);
     userData.open("userData.txt",ios::app);
-    usuarios << user.getUser() << endl;
-    usuarios << user.getUserPass() << endl;
     userData << "Usuario: " << user.getUser() << endl;
     userData << "Password: " << user.getUserPass() << endl;
     userData << "Nombre: " << user.getName() << endl;
@@ -149,8 +142,7 @@ void registro(){
     addUserToDataBase(user);
 
     system("cls");
-    cout<<"Usuario agregado con exito!\n";
-    usuarios.close();   
+    cout<<"Usuario agregado con exito!\n"; 
 }
 
 
@@ -280,7 +272,6 @@ void app(){
                 if(login()){
                     system("cls");
                     cout<<"Bienvenido, " << usuarioActivo.at(0).getName() << "!" << endl;
-                    //cout << usuarioActivo.size() << endl;
                     menu();
                 }
                 else{

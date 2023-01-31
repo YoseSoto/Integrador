@@ -5,7 +5,6 @@
 using namespace std;
 
 fstream userData;
-fstream usuarios;
 char caracter;
 
 class Usuario{
@@ -82,14 +81,11 @@ void Usuario::setName(string name){
 }
 
 void Usuario::changePass(){
-    string temp_pass,temp_pass2,temp;
-    while(!usuarios.eof()){
-        getline(usuarios,temp);
-        if(temp == this->password){
-            break;
-        }
-    }
+    string temp_pass,temp_pass2;
+
     do{
+        
+        temp_pass="";
         cout<<"Ingrese antigua password: ";
 
         caracter = getch();
@@ -109,11 +105,9 @@ void Usuario::changePass(){
 
         if(temp_pass != password){
                 cout<<"\nPassword incorrecta\n";
-                cout<<this->getUserPass()<<endl;
-            }     
-    }while(temp_pass != this->password);
-
-    usuarios.open("usuarios.txt", ios::app);
+            }   
+          system("cls");
+    }while(temp_pass != password);
 
     string temp_passx,temp_pass2x,tempx;
 
@@ -121,7 +115,7 @@ void Usuario::changePass(){
         if(temp_passx != temp_pass2x){
             cout<<"Las password no coinciden\n";
         }
-        cout<<"\nIngrese nueva password: ";
+        cout<<"Ingrese nueva password: ";
 
         caracter = getch();
         while (caracter != 13){
@@ -156,8 +150,27 @@ void Usuario::changePass(){
         }
         
     }while(temp_passx != temp_pass2x);
-    this->password = temp_passx;
-    system("cls");
+
+    string temp_line;
+    userData.open("userData.txt", ios::app);
+
+    while(!userData.eof()){
+
+        getline(userData,temp_line);
+        cout<<temp_line<<endl; // por que no sirve qm.
+
+        cout<<"PENE"<<endl;
+
+        if(temp_line == "Usuario: " + this->usuario){
+            cout << userData.tellp() << endl;
+        }
+        if(temp_line == "Password: " + this->password){
+            this->password = temp_passx;
+            userData << "Password: " + this->password;
+            break;
+        }
+    }
+    //system("cls");
     cout<<"Su password ha cambiado con exito!\n";
-    usuarios.close();
+    userData.close();
 }
