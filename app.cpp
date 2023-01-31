@@ -32,6 +32,7 @@ bool login(){
     cin >> in_user;
     cout<<"Password: "; 
 
+    un = getch();
     caracter = getch();
     while (caracter != 13){
         if(caracter != 8){

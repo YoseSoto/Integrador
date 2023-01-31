@@ -1,10 +1,11 @@
 #include <fstream>
-#include <conio.h>
+#include <myconio_mac.h>
 #include <iostream>
 #include <string.h>
 using namespace std;
 
 fstream userData;
+char un;
 char caracter;
 
 class Usuario{
@@ -87,7 +88,8 @@ void Usuario::changePass(){
         
         temp_pass="";
         cout<<"Ingrese antigua password: ";
-
+        
+        un = getch();
         caracter = getch();
         while (caracter != 13){
             if(caracter != 8){
@@ -116,7 +118,8 @@ void Usuario::changePass(){
             cout<<"Las password no coinciden\n";
         }
         cout<<"Ingrese nueva password: ";
-
+        
+        un = getch();
         caracter = getch();
         while (caracter != 13){
             if(caracter != 8){
@@ -134,6 +137,7 @@ void Usuario::changePass(){
 
         cout<<"\nConfirme nueva password: ";
 
+        un = getch();
         caracter = getch();
         while (caracter != 13){
             if(caracter != 8){
@@ -159,7 +163,7 @@ void Usuario::changePass(){
         getline(userData,temp_line);
         cout<<temp_line<<endl; // por que no sirve qm.
 
-        cout<<"PENE"<<endl;
+        cout<<"TEST"<<endl;
 
         if(temp_line == "Usuario: " + this->usuario){
             cout << userData.tellp() << endl;
