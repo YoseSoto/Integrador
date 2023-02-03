@@ -159,7 +159,7 @@ void Usuario::changePass(){
         getline(userData,temp_line);
         cout<<temp_line<<endl; // por que no sirve qm.
 
-        cout<<"PENE"<<endl;
+        cout<<"Test"<<endl;
 
         if(temp_line == "Usuario: " + this->usuario){
             cout << userData.tellp() << endl;
