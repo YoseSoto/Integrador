@@ -5,7 +5,6 @@ vector<Usuario> usuarioActivo;
 vector<Usuario> usersLoggedIn;
 
 fstream vuelos;
-vector<Avion> lista_aviones;
 vector<Vuelo> lista_vuelos;
 
 bool band = false;
@@ -14,8 +13,14 @@ string _usuario, _password, _password2;
 
 Avion AirbusA320 = Avion("AirbusA320",4,220);
 Avion Boeing737 = Avion("Boeing737",8,220);
-Vuelo CDMXtoMTY = Vuelo(numPasajeros, 655,"Volaris",2054,"Monterrey,NL",990,AirbusA320,"1.44h","Primera Clase");
-Vuelo CDMXtoCUN = Vuelo(numPasajeros, 7263,"Viva Aerobus",1449,"Cancun",1608,Boeing737,"2:16h","Turista");
+Avion Boeing747 = Avion("Boeing747",10,400);
+
+Vuelo CDMXtoMTY = Vuelo( 655,"Volaris",2054,"Monterrey,NL",990,AirbusA320,"1.44h","Primera Clase");
+Vuelo CDMXtoCUN = Vuelo( 7263,"Viva Aerobus",1449,"Cancun",1608,Boeing737,"2:16h","Turista");
+Vuelo CDMXtoGDL = Vuelo( 2142,"Aeromexico",1922,"Guadalajara",536,AirbusA320,"1:22","Turista");
+Vuelo CDMXtoMADRID = Vuelo(133,"Aeromexico",15924,"Madrid",9057,Boeing747,"10:24","Primera Clase");
+Vuelo CDMXtoLondres = Vuelo(9029,"British Airways",15263,"Londres",8982,Boeing747,"14:15","Turista");
+
 
 bool login(){
     system("cls");
@@ -53,6 +58,7 @@ bool login(){
         getline(userData,temp_last);
         getline(userData,temp_age);
         getline(userData,fileSpace);
+        //cout<< endl << temp_user << " " << temp_user << " " << temp_pass << " " << temp_name << " " << temp_last << " " << temp_age << " " << fileSpace << endl;
         if( "Usuario: " + in_user == temp_user && "Password: " + in_pass == temp_pass ){
             Usuario usuario = Usuario(temp_name, in_pass);   
             usuario.setName(temp_name);
@@ -61,9 +67,6 @@ bool login(){
             usuarioActivo.push_back(usuario);  
             userData.close();
             return true;
-        }
-        else{
-            break;
         }
     }
     userData.close();    
@@ -162,43 +165,46 @@ void addFlightToDataBase(Vuelo flight){
 
 void listaVuelos(){
 
-    vuelos.open("vuelos.txt",ios::in);
-    int i,j=0;
+    int i;
     char opcion;
     string temp_line;
-
-    lista_aviones.push_back(AirbusA320);
-    lista_aviones.push_back(Boeing737);
     
     do{
-        system("cls");
+        vuelos.open("vuelos.txt",ios::in);
+        int j = 0;
+        //system("cls");
         cout<<"\n\tLista de vuelos disponibles\n";
-        while(!vuelos.eof()){
+        while(!vuelos.eof() && j<5){
             cout<<"Detalles de vuelo "<<j+1<<"): \n";
-            for(i=0; i<9;i++){
+            for(i=0; i<8;i++){
                 getline(vuelos,temp_line);
                 cout<<"   "<<temp_line<<endl;
             }
+            cout<<endl;
             j++;
         }
-        cout<<"    0) Regresar\n";
+        cout<<"   0) Regresar\n";
         cin >> opcion;
         switch(opcion){
             case '1':
                 system("cls");
-                CDMXtoMTY.agregar();
-                lista_reservaciones.push_back(CDMXtoMTY);
+                CDMXtoMTY.agregar(CDMXtoMTY,usuarioActivo.at(0));
             break;
             case '2':
                 system("cls");
-                CDMXtoCUN.agregar();
-                lista_reservaciones.push_back(CDMXtoCUN);
+                CDMXtoCUN.agregar(CDMXtoCUN,usuarioActivo.at(0));
             break;
             case '3':
+                system("cls");
+                CDMXtoGDL.agregar(CDMXtoGDL,usuarioActivo.at(0));
             break;
             case '4':
+                system("cls");
+                CDMXtoMADRID.agregar(CDMXtoMADRID,usuarioActivo.at(0));
             break;
             case '5':
+                system("cls");
+                CDMXtoLondres.agregar(CDMXtoLondres,usuarioActivo.at(0));
             break;
             case '0':
                 system("cls");
@@ -206,15 +212,21 @@ void listaVuelos(){
             default:
                 system("cls");
                 cout<<"Opcion inexistente...\n";
-
         }
-    }while(opcion != '0');
-    vuelos.close();
+        opcion = '0';
+        vuelos.close();
+    }while(opcion!='0');
     band = true;
 }
 
 void checarVuelo(){
-
+    string temp;
+    reservaciones.open("reservaciones.txt",ios::in);
+    cout << "\tDetalles de su vuelo:\n";
+    while(!reservaciones.eof()){
+        getline(reservaciones,temp);
+        cout<<temp<<endl;
+    }
 }
 
 void menu(){
@@ -223,13 +235,18 @@ void menu(){
         cout<<"\n\tReservaciones Yose\n";
         cout<<"1) Reservar vuelo\n";
         cout<<"2) Checar vuelo\n";
-        cout<<"3) Cambiar password\n";
-        cout<<"4) Salir\n";
+        //cout<<"3) Cambiar password\n";
+        cout<<"3) Salir\n";
         cin>>opcion;
         switch(opcion){
             case '1':
                 system("cls");
-                listaVuelos();
+                if(!band){
+                    listaVuelos();
+                }
+                else{
+                    cout<<"Usted YA tiene un vuelo en reserva!\n";
+                }
             break;
             case '2':
                 system("cls");
@@ -240,18 +257,18 @@ void menu(){
                     cout<<"Usted aun no tiene ningun vuelo en reserva!\n";
                 }
             break;
+            //case '3':
+                //system("cls");
+                //usuarioActivo.at(0).changePass();
+            //break;
             case '3':
-                system("cls");
-                usuarioActivo.at(0).changePass();
-            break;
-            case '4':
                 system("cls");
                 break;
             default: 
                 system("cls");
                 cout<<"Opcion inexistente...\n";
         }
-    }while(opcion != '4');
+    }while(opcion != '3');
 }
 
 void app(){
@@ -260,6 +277,9 @@ void app(){
         vuelos.close();
         addFlightToDataBase(CDMXtoMTY);
         addFlightToDataBase(CDMXtoCUN);
+        addFlightToDataBase(CDMXtoGDL);
+        addFlightToDataBase(CDMXtoMADRID);
+        addFlightToDataBase(CDMXtoLondres);
     }
     char opcion;
     do{
@@ -271,7 +291,7 @@ void app(){
             case '1': 
                 if(login()){
                     system("cls");
-                    cout<<"Bienvenido, " << usuarioActivo.at(0).getName() << "!" << endl;
+                    cout << usuarioActivo.at(0).getName() << ", bienvenido!" << endl;
                     menu();
                 }
                 else{

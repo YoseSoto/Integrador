@@ -14,3 +14,27 @@ Precio: 1449
 Kilometros: 1608
 Tiempo estimado: 2:16h
 Avion: Boeing737
+Destino: Guadalajara
+Id: 2142
+Aerolinea: Aeromexico
+Clase: Turista
+Precio: 1922
+Kilometros: 536
+Tiempo estimado: 1:22
+Avion: AirbusA320
+Destino: Madrid
+Id: 133
+Aerolinea: Aeromexico
+Clase: Primera Clase
+Precio: 15924
+Kilometros: 9057
+Tiempo estimado: 10:24
+Avion: Boeing747
+Destino: Londres
+Id: 9029
+Aerolinea: British Airways
+Clase: Turista
+Precio: 15263
+Kilometros: 8982
+Tiempo estimado: 14:15
+Avion: Boeing747

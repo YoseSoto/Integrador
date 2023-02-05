@@ -4,8 +4,8 @@ Nombre: Yose
 Apellido: Sotomayor
 Edad: 18
 
-Usuario: pollino74
-Password: pollino74123
+Usuario: Pollino74
+Password: pollino74
 Nombre: Miguel
 Apellido: Sotomayor
 Edad: 47

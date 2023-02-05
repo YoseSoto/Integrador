@@ -2,8 +2,8 @@
 #include "usuario.h"
 using namespace std;
 
+
 fstream reservaciones;
-const int numPasajeros = 0;
 
 class Pasajero{
     private:
@@ -15,7 +15,7 @@ class Pasajero{
             this->apellido = apellido;
         }
         string getCompleteName(){
-            return nombre, apellido;
+            return nombre + " " + apellido;
         }
 };
 
@@ -33,7 +33,7 @@ class Avion{
 
 class Vuelo{
     private:
-        vector<Pasajero> lista_pasajeros;
+        vector<Pasajero*> lista_pasajeros;
         int numPasajeros;
         int idVuelo;
         string aerolinea;
@@ -45,7 +45,7 @@ class Vuelo{
         string clase;
         
     public:
-        Vuelo(int,int,string,double,string,double,Avion ,string,string);
+        Vuelo(int,string,double,string,double,Avion ,string,string);
         int getPassengers();
         string getAeroline();
         string getDest();
@@ -55,16 +55,15 @@ class Vuelo{
         string getClass();
         double getPrice();
         int getId();
-        void agregar();
+        void setPassengers(int);
+        Pasajero getPasajero(int);
+        void agregar(Vuelo,Usuario);
         void comprarVuelo();
         void cancelarVuelo();
 };
 
-
-
-vector<Vuelo> lista_reservaciones;
-Vuelo::Vuelo(int numPasajeros, int idVuelo, string aerolinea, double precio, string destino, double kilometros, Avion avion, string duracion,string clase): avion("",0,0){
-    this->numPasajeros = numPasajeros;
+Vuelo::Vuelo (int idVuelo, string aerolinea, double precio, string destino, double kilometros, Avion avion, string duracion,string clase): avion("",0,0){
+    //this->numPasajeros = numPasajeros;
     this->idVuelo = idVuelo;
     this->aerolinea = aerolinea;
     this->precio = precio;
@@ -75,8 +74,16 @@ Vuelo::Vuelo(int numPasajeros, int idVuelo, string aerolinea, double precio, str
     this->clase = clase;
 }
 
+void Vuelo::setPassengers(int passengers){
+    this->numPasajeros = passengers;    
+}
+
 int Vuelo::getPassengers(){
     return numPasajeros;
+}
+
+Pasajero Vuelo::getPasajero(int i){
+    return *lista_pasajeros.at(i);
 }
 
 int Vuelo::getId(){
@@ -120,31 +127,41 @@ void Vuelo::cancelarVuelo(){
     
 }
 
-void Vuelo::agregar(){
-    int i=0,j;
-    string temp_nombre, temp_last;
-    reservaciones.open("reservaciones.txt",ios::app);
+vector<Vuelo> lista_reservaciones;
 
+void Vuelo::agregar(Vuelo vuelo, Usuario user){
+    int numPasajeros_;
+    lista_reservaciones.push_back(vuelo);
+    int i,j;
+    string temp_nombre, temp_last;
+    reservaciones.open("reservaciones.txt",ios::out);
     cout<<"Cuantos pasajeros viajaran: ";
-    cin >> numPasajeros;
-    
+    cin >> numPasajeros_;
+    this->setPassengers(numPasajeros_);
     for(j = 0 ; j < numPasajeros ; j++){
         fflush(stdin);
-        cout << "Ingrese nombre y apellido de la persona [" << j+1 << "]: ";
-        cin >> temp_nombre, temp_last;
-        Pasajero pasajero = Pasajero(temp_nombre, temp_last);
+        cout << "Ingrese nombre de la persona [" << j+1 << "]: ";
+        cin >> temp_nombre;
+        cout << "Ingrese apellido de la persona [" << j+1 << "]: ";
+        cin >> temp_last;
+        Pasajero *pasajero = new Pasajero(temp_nombre,temp_last);
         this->lista_pasajeros.push_back(pasajero);
     }
 
     while(!reservaciones.eof()){
+        reservaciones<<"Reservacion" << " por usuario: " << user.getUser() << endl;
+        reservaciones << lista_reservaciones.at(0).getAeroline() << " CDMX a " << lista_reservaciones.at(0).getDest() << " ID: " << lista_reservaciones.at(0).getId() << endl;
+        reservaciones<<"Pasajeros: \n";
         for(j = 0; j < numPasajeros ; j++){
-            reservaciones << lista_reservaciones.at(j).lista_pasajeros.at(j).getCompleteName();
-        }  
-        reservaciones << lista_reservaciones.at(i).getId();
-        i++;
+            reservaciones << this->lista_pasajeros.at(j)->getCompleteName() << endl;
+        }
+        break;
     }
     reservaciones.close();
-    cout<<"Tu vuelo con destino a "<< this->destino << this->idVuelo<< " ha sido agregado!\n";
+    system("cls");
+    cout<<"Tu vuelo con destino a "<< this->destino << " - " << this->idVuelo<< " ha sido agregado!\n";
+    system("pause");
+    system("cls");
 }
 
 Avion::Avion(string name, int numPuertas, int capacidad){
