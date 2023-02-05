@@ -227,6 +227,7 @@ void checarVuelo(){
         getline(reservaciones,temp);
         cout<<temp<<endl;
     }
+    reservaciones.close();
 }
 
 void menu(){
